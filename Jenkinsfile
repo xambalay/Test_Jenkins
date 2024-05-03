@@ -1,10 +1,23 @@
-pipeline{   // Mot-clé qui montre que ceci est un pipeline
-    agent any // Celui qui exécute le code (peut être spécifique indéfini comme any)
-    stages{  // L'ensemble des étapes d'exécution
-        stage{  // La première étape de notre pipeline
-            steps{  // Les taches de l'étape
-                bat "docker-compose up -d"  // Il va lancer la commande
-            }
-        }
+pipeline {
+  agent any
+  stages {
+    stage ('test') {
+      steps {
+        bat 'docker ps -a'
+      }
     }
+    stage ('Run Docker Compose') {
+      steps {
+        bat 'docker-compose up  -d'
+      }
+    }
+  }
+  post {
+    success {
+      slackSend channel: '#projet-aws', message: 'Code execute'
+    }
+    failure {
+      slackSend channel: '#projet-aws', message: 'Code execute with error'
+    }
+  }
 }
