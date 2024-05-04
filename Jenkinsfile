@@ -12,4 +12,12 @@ pipeline {
       }
     }
   }
+  post {
+    success {
+      slackSend channel: '#projet', message: 'Code execute'
+    }
+    failure {
+      slackSend channel: '#projet', message: 'Code execute with error'
+    }
+  }
 }
